@@ -7,9 +7,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import os
 import time
+from config import BRAVE_PATH
 
-
-BRAVE_PATH = r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
 TRADE_URL = "https://funpay.com/lots/81/trade"
 LOGOUT_BUTTON_SELECTOR = "a.menu-item-logout[href*='logout']"
 RAISE_BUTTON_SELECTOR = "button.js-lot-raise"
