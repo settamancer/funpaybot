@@ -24,7 +24,7 @@ TRADE_URLS = {
     },
     "1106": {
         "url": "https://funpay.com/lots/1106/trade",
-        "checkbox_values": ["1234", "5678"]  # <-- Заменить на актуальные
+        "checkbox_values": ["697", "1106"]  # <-- Заменить на актуальные
     }
 }
 TIMEOUT = 30
