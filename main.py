@@ -14,8 +14,20 @@ COOKIES_FILE = "cookies.json"
 TRADE_URL = "https://funpay.com/lots/81/trade"
 LOGIN_URL = "https://funpay.com/en/account/login"
 LOGOUT_BUTTON_SELECTOR = "a.menu-item-logout[href*='logout']"
-RAISE_BUTTON_SELECTOR = "button.js-lot-raise"
-TIMEOUT = 30
+RRAISE_BUTTON_SELECTOR = "button.js-lot-raise"
+RAISE_OFFERS_BUTTON_SELECTOR = "button.js-lot-raise-ex"
+CHECKBOX_SELECTOR = "input[type='checkbox'][value='{value}']"
+
+TRADE_URLS = {
+    "82": {
+        "url": "https://funpay.com/lots/82/trade",
+        "checkbox_values": ["82", "502"]
+    },
+    "1106": {
+        "url": "https://funpay.com/lots/1106/trade",
+        "checkbox_values": ["1234", "5678"]  # <-- Заменить на актуальные
+    }
+}
 
 class FunPayAutoRaiser:
     def __init__(self):
@@ -80,25 +92,47 @@ class FunPayAutoRaiser:
             self.save_cookies(self.driver)
         finally:
             self.driver.quit()
-
     def raise_lot(self):
         print("🌐 Запускаем браузер в headless-режиме...")
         self.driver = self.setup_driver(headless=True)
         self.load_cookies(self.driver)
-        self.driver.get(TRADE_URL)
 
-        try:
-            print("🔎 Ищем кнопку 'Поднять'...")
-            raise_button = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, RAISE_BUTTON_SELECTOR)))
-            self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", raise_button)
-            time.sleep(1)
-            raise_button.click()
-            print("✅ Лот успешно поднят!")
-        except Exception as e:
-            print(f"❌ Ошибка при поднятии лота: {e}")
-            self.driver.save_screenshot("raise_error.png")
-        finally:
-            self.driver.quit()
+        for lot_id, lot_info in TRADE_URLS.items():
+            try:
+                print(f"🔄 Обработка лота {lot_id}...")
+                self.driver.get(lot_info["url"])
+
+                # Первая кнопка "Поднять предложения"
+                print("🟡 Нажимаем первую кнопку 'Поднять предложения'...")
+                first_button = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, RAISE_BUTTON_SELECTOR)))
+                self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", first_button)
+                time.sleep(1)
+                first_button.click()
+
+                # Отметить чекбоксы
+                print("☑️ Отмечаем нужные чекбоксы...")
+                for checkbox_value in lot_info["checkbox_values"]:
+                    selector = CHECKBOX_SELECTOR.format(value=checkbox_value)
+                    checkbox = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
+                    if not checkbox.is_selected():
+                        self.driver.execute_script("arguments[0].click();", checkbox)
+                        print(f"  ☑️ Активирован чекбокс {checkbox_value}")
+                    else:
+                        print(f"  🔘 Чекбокс {checkbox_value} уже активен")
+
+                # Вторая кнопка "Поднять предложения"
+                print("🟢 Нажимаем вторую кнопку 'Поднять предложения'...")
+                second_button = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, RAISE_OFFERS_BUTTON_SELECTOR)))
+                self.driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", second_button)
+                time.sleep(1)
+                second_button.click()
+                print(f"✅ Лот {lot_id} успешно обработан!")
+
+            except Exception as e:
+                print(f"❌ Ошибка при обработке лота {lot_id}: {e}")
+                self.driver.save_screenshot(f"raise_error_{lot_id}.png")
+
+        self.driver.quit()
 
     def run(self, interval_hours=4):
         # Если нет cookies — логин вручную
