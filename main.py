@@ -14,10 +14,9 @@ COOKIES_FILE = "cookies.json"
 TRADE_URL = "https://funpay.com/lots/81/trade"
 LOGIN_URL = "https://funpay.com/en/account/login"
 LOGOUT_BUTTON_SELECTOR = "a.menu-item-logout[href*='logout']"
-RRAISE_BUTTON_SELECTOR = "button.js-lot-raise"
+RAISE_BUTTON_SELECTOR = "button.js-lot-raise"
 RAISE_OFFERS_BUTTON_SELECTOR = "button.js-lot-raise-ex"
 CHECKBOX_SELECTOR = "input[type='checkbox'][value='{value}']"
-
 TRADE_URLS = {
     "82": {
         "url": "https://funpay.com/lots/82/trade",
@@ -28,6 +27,7 @@ TRADE_URLS = {
         "checkbox_values": ["1234", "5678"]  # <-- Заменить на актуальные
     }
 }
+TIMEOUT = 30
 
 class FunPayAutoRaiser:
     def __init__(self):
