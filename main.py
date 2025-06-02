@@ -24,9 +24,14 @@ TRADE_URLS = {
     },
     "1106": {
         "url": "https://funpay.com/lots/1106/trade",
-        "checkbox_values": ["697", "1106"]  # <-- Заменить на актуальные
+        "checkbox_values": ["1106", "697"]
+    },
+    "2409": {
+        "url": "https://funpay.com/lots/2409/trade",
+        "checkbox_values": []
     }
 }
+
 TIMEOUT = 30
 
 class FunPayAutoRaiser:
