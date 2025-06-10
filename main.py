@@ -139,7 +139,7 @@ class FunPayAutoRaiser:
 
         self.driver.quit()
 
-    def run(self, interval_hours=4):
+    def run(self, interval_hours=2):
         # Если нет cookies — логин вручную
         if not os.path.exists(COOKIES_FILE):
             self.manual_login()
