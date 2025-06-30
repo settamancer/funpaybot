@@ -47,7 +47,7 @@ class FunPayAutoRaiser:
             options.add_argument("--window-size=1920,1080")
         else:
             options.add_argument("--start-maximized")
-        service = Service(ChromeDriverManager(driver_version="136.0.7103.94").install())
+        service = Service(ChromeDriverManager(driver_version="138.0.7204.49").install())
         driver = webdriver.Chrome(service=service, options=options)
         self.wait = WebDriverWait(driver, TIMEOUT)
         return driver
